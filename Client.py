@@ -53,12 +53,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
                 text = r.recognize_google(audio)
                 print('Usted dijo: {}'.format(text))
                 TCPClientSocket.sendall(bytes(text, 'utf8'))
+                if text == 'Adios':
+                    break
             except:
                 print('No se reconocio')
+                TCPClientSocket.sendall(bytes('No se reconocio', 'utf8'))
+
             # print("Elige casilla")
             # x = int(input())
             # TCPClientSocket.sendall(bytes([x]))
-            break
     tiempo_final = time.time()
     tiempo_ejecucion = tiempo_final - tiempo_inicial
     print('Duracion de la partida: %.2f segs.' % round(tiempo_ejecucion, 2))
