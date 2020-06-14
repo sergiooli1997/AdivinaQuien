@@ -3,18 +3,20 @@ import os
 import sys
 import threading
 import time
+from random import randint
 
 bufferSize = 1024
-tablero = [['Personaje1', 'car1', 'car2', 'car3', 'car4', 'car5'],
-           ['Personaje2', 'car1', 'car2', 'car3', 'car4', 'car5'],
-           ['Personaje3', 'car1', 'car2', 'car3', 'car4', 'car5'],
-           ['Personaje4', 'car1', 'car2', 'car3', 'car4', 'car5'],
-           ['Personaje5', 'car1', 'car2', 'car3', 'car4', 'car5'],
-           ['Personaje6', 'car1', 'car2', 'car3', 'car4', 'car5'],
-           ['Personaje7', 'car1', 'car2', 'car3', 'car4', 'car5'],
-           ['Personaje8', 'car1', 'car2', 'car3', 'car4', 'car5'],
-           ['Personaje9', 'car1', 'car2', 'car3', 'car4', 'car5'],
-           ['Personaje10', 'car1', 'car2', 'car3', 'car4', 'car5']]
+n = 0
+tablero = [['Personaje1', 'ojos azules', ' delgado', 'car3', 'car4', 'car5'],
+           ['Personaje2', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
+           ['Personaje3', 'ojos verdes', 'delgado', 'car3', 'car4', 'car5'],
+           ['Personaje4', 'ojos azules', 'delgado', 'car3', 'car4', 'car5'],
+           ['Personaje5', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
+           ['Personaje6', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
+           ['Personaje7', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
+           ['Personaje8', 'ojos azules', 'delgado', 'car3', 'car4', 'car5'],
+           ['Personaje9', 'ojos verdes', 'delgado', 'car3', 'car4', 'car5'],
+           ['Personaje10', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5']]
 
 
 def servirPorSiempre(socketTcp, listaconexiones):
@@ -45,7 +47,12 @@ def gestion_conexiones(listaconexiones):
 def jugador_activo(Client_conn, tablero):
     Client_conn.send(bytes('Tu turno', 'utf8'))
     data = Client_conn.recv(bufferSize)
-    print(data.decode('utf8'))
+    pregunta = data.decode('utf8')
+    band = 'no'
+    for i in range(6):
+        if pregunta == tablero[n][i]:
+            band = 'si'
+        Client_conn.send(bytes(band, 'utf8'))
 
 
 def recibir_datos(Client_conn, addr, barrier, lock):
@@ -62,6 +69,8 @@ def recibir_datos(Client_conn, addr, barrier, lock):
         print(threading.current_thread().name, 'Después de la barrera', jugador)
         time.sleep(1)
         Client_conn.send(bytes('Todos los jugadores se han conectado', 'utf8'))
+        n = randint(0, 9)
+        print('Se le asigno a {} {}'.format(threading.current_thread().name, tablero[n][0]))
         while True:
             # Lock para determinar turnos
             lock.acquire()

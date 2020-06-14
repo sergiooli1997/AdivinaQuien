@@ -46,19 +46,28 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
         os.system("cls")
         data = TCPClientSocket.recv(bufferSize)
         print(data.decode('utf8'))
+        res = 'n'
         with sr.Microphone() as source:
-            print('Lo escucho')
-            audio = r.listen(source)
-            try:
-                text = r.recognize_google(audio)
-                print('Usted dijo: {}'.format(text))
-                TCPClientSocket.sendall(bytes(text, 'utf8'))
-                if text == 'Adios':
-                    break
-            except:
-                print('No se reconocio')
-                TCPClientSocket.sendall(bytes('No se reconocio', 'utf8'))
-
+            while res != 's':
+                print('Lo escucho')
+                r.adjust_for_ambient_noise(source, duration=0.2)
+                audio = r.listen(source)
+                try:
+                    text = r.recognize_google(audio)
+                    text = text.lower()
+                    print('Usted dijo: {}'.format(text))
+                    print('¿Es correcto? (s/n)')
+                    res = input()
+                except:
+                    print('No se reconocio')
+            TCPClientSocket.sendall(bytes(text, 'utf8'))
+            # respuesta del servidor
+            data = TCPClientSocket.recv(bufferSize)
+            resp = data.decode('utf8')
+            print(resp)
+            # identificar ganador y terminar juego
+            if text == 'Adios':
+                break
             # print("Elige casilla")
             # x = int(input())
             # TCPClientSocket.sendall(bytes([x]))
