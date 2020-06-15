@@ -51,7 +51,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
         # actualiza
         data = TCPClientSocket.recv(bufferSize)
         print(data.decode('utf8'))
-        actualiza_jugadores(TCPClientSocket)
+        # actualiza_jugadores(TCPClientSocket)
         res = 'n'
         # recibe pregunta por microfono y confirma
         with sr.Microphone() as source:

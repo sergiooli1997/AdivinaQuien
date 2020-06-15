@@ -60,7 +60,7 @@ def gestion_conexiones(listaconexiones):
 def jugador_activo(Client_conn, tablero, n):
     global pregunta, respuesta
     Client_conn.send(bytes('Tu turno', 'utf8'))
-    actualiza_jugadores(Client_conn)
+    # actualiza_jugadores(Client_conn)
     data = Client_conn.recv(bufferSize)
     pregunta = data.decode('utf8')
     band = 'no'
