@@ -7,21 +7,17 @@ bufferSize = 1024
 
 r = sr.Recognizer()
 
-tablero = []
 
-
-def imprimir_tablero(tablero, n):
+def imprimir_tablero(TCPClientSocket):
     a = ""
-    if n == 3:
-        print('\t0' + '\t1' + '\t2')
-    if n == 5:
-        print('\t0' + '\t1' + '\t2' + '\t3' + '\t4')
-    for i in range(n):
-        print(i, end="\t")
-        for j in range(n):
-            a += str(tablero[i][j]) + '\t'
-        print(a)
-        a = ""
+    for i in range(10):
+        for j in range(6):
+            data = TCPClientSocket.recv(bufferSize)
+            resp = data.decode('utf8')
+            a += str(resp) + '\t'
+            print(a)
+            a = ""
+        print('\n')
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
@@ -34,6 +30,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
     tiempo_inicial = time.time()
     print("---------BIENVENIDO A ADIVINA QUIEN---------")
     os.system("cls")
+    imprimir_tablero(TCPClientSocket)
     barrier = TCPClientSocket.recv(bufferSize)
     string1 = barrier.decode('utf8')
     print(string1)
@@ -42,8 +39,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
     print(string2)
     os.system("cls")
     print('Empezando juego')
+    os.system("cls")
     while True:
-        os.system("cls")
         data = TCPClientSocket.recv(bufferSize)
         print(data.decode('utf8'))
         res = 'n'

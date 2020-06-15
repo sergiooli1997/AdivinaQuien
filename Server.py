@@ -7,16 +7,22 @@ from random import randint
 
 bufferSize = 1024
 n = 0
-tablero = [['Personaje1', 'ojos azules', ' delgado', 'car3', 'car4', 'car5'],
-           ['Personaje2', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
-           ['Personaje3', 'ojos verdes', 'delgado', 'car3', 'car4', 'car5'],
-           ['Personaje4', 'ojos azules', 'delgado', 'car3', 'car4', 'car5'],
-           ['Personaje5', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
-           ['Personaje6', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
-           ['Personaje7', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
-           ['Personaje8', 'ojos azules', 'delgado', 'car3', 'car4', 'car5'],
-           ['Personaje9', 'ojos verdes', 'delgado', 'car3', 'car4', 'car5'],
-           ['Personaje10', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5']]
+tablero = [['Jose', 'ojos azules', ' delgado', 'car3', 'car4', 'car5'],
+           ['Juan', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
+           ['Louis', 'ojos verdes', 'delgado', 'car3', 'car4', 'car5'],
+           ['Norma', 'ojos azules', 'delgado', 'car3', 'car4', 'car5'],
+           ['Lola', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
+           ['Maria', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
+           ['Rocio', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
+           ['Frida', 'ojos azules', 'delgado', 'car3', 'car4', 'car5'],
+           ['Celeste', 'ojos verdes', 'delgado', 'car3', 'car4', 'car5'],
+           ['Alfredo', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5']]
+
+
+def imprimir_tablero(Client_conn):
+    for i in range(10):
+        for j in range(6):
+            Client_conn.send(bytes(tablero[i][j], 'utf8'))
 
 
 def servirPorSiempre(socketTcp, listaconexiones):
