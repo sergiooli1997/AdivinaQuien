@@ -19,6 +19,8 @@ tablero = [['Jose', 'football', 'natacion', 'basketball', 'taekwondo', 'volleyba
 
 pregunta = ""
 respuesta = ""
+band_ganador = False
+ganador = ""
 
 def imprimir_tablero(Client_conn):
     for i in range(10):
@@ -58,7 +60,7 @@ def gestion_conexiones(listaconexiones):
 
 
 def jugador_activo(Client_conn, tablero, n):
-    global pregunta, respuesta
+    global pregunta, respuesta, band_ganador, ganador
     Client_conn.send(bytes('Tu turno', 'utf8'))
     # actualiza_jugadores(Client_conn)
     data = Client_conn.recv(bufferSize)
@@ -72,7 +74,8 @@ def jugador_activo(Client_conn, tablero, n):
     Client_conn.send(bytes(band, 'utf8'))
     # ¿Adivino el nombre del personaje?
     if tablero[n][0].lower() == pregunta:
-        return True
+        band_ganador = True
+        ganador = threading.current_thread().name
 
 
 def recibir_datos(Client_conn, addr, barrier, lock):
@@ -96,17 +99,22 @@ def recibir_datos(Client_conn, addr, barrier, lock):
         while True:
             # Lock para determinar turnos
             lock.acquire()
+            # determinar si nadie gano antes de preguntar
             print('Turno de ' + threading.current_thread().name)
-            band = jugador_activo(Client_conn, tablero, n)
-            if band:
-                print('gano ' + threading.current_thread().name)
+            if band_ganador:
+                print('gano ' + ganador)
                 Client_conn.send(bytes('si', 'utf8'))
-                Client_conn.send(bytes('gano ' + threading.current_thread().name, 'utf8'))
+                if ganador == threading.current_thread().name:
+                    Client_conn.send(bytes('Ganaste :D', 'utf8'))
+                else:
+                    Client_conn.send(bytes('Perdiste :( Gano ' + ganador, 'utf8'))
+                lock.release()
+                break
             else:
                 print('Todavia no hay ganador')
                 Client_conn.send(bytes('no', 'utf8'))
+            jugador_activo(Client_conn, tablero, n)
             lock.release()
-            time.sleep(2)
     except Exception as e:
         print(e)
     finally:

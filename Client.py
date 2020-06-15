@@ -48,9 +48,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
     print("---------BIENVENIDO A ADIVINA QUIEN---------")
     imprimir_tablero(TCPClientSocket)
     while True:
-        # actualiza
+        # determinar si hay ganador antes de preguntar
+        data = TCPClientSocket.recv(bufferSize)
+        ganador = data.decode('utf8')
+        if ganador == 'si':
+            break
+        # espera su turno
         data = TCPClientSocket.recv(bufferSize)
         print(data.decode('utf8'))
+        # actualiza
         # actualiza_jugadores(TCPClientSocket)
         res = 'n'
         # recibe pregunta por microfono y confirma
@@ -72,11 +78,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
             data = TCPClientSocket.recv(bufferSize)
             resp = data.decode('utf8')
             print(resp)
-            # identificar ganador y terminar juego
-            data = TCPClientSocket.recv(bufferSize)
-            ganador = data.decode('utf8')
-            if ganador == 'si':
-                break
     #imprime ganador
     data = TCPClientSocket.recv(bufferSize)
     print(data.decode('utf8'))
