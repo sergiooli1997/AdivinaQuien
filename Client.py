@@ -18,6 +18,15 @@ def imprimir_tablero(TCPClientSocket):
         print('\n')
 
 
+def actualiza_jugadores(TCPClientSocket):
+    pregunta = TCPClientSocket.recv(bufferSize)
+    if pregunta.decode('utf8') != "":
+        print('Se pregunto' + pregunta.decode('utf8'))
+    respuesta = TCPClientSocket.recv(bufferSize)
+    if respuesta.decode('utf8') != "":
+        print('La respuesta ' + respuesta.decode('utf8'))
+
+
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
     os.system("cls")
     print('Ingresa direccion del servidor')
@@ -37,6 +46,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
     print("---------BIENVENIDO A ADIVINA QUIEN---------")
     imprimir_tablero(TCPClientSocket)
     while True:
+        actualiza_jugadores(TCPClientSocket)
         data = TCPClientSocket.recv(bufferSize)
         print(data.decode('utf8'))
         res = 'n'
