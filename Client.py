@@ -9,14 +9,12 @@ r = sr.Recognizer()
 
 
 def imprimir_tablero(TCPClientSocket):
-    a = ""
     for i in range(10):
         for j in range(6):
             data = TCPClientSocket.recv(bufferSize)
             resp = data.decode('utf8')
-            a += str(resp) + '\t'
-            print(a)
-            a = ""
+            print(resp + '\t')
+            time.sleep(0.1)
         print('\n')
 
 
@@ -28,18 +26,16 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
     PORT = int(input())
     TCPClientSocket.connect((HOST, PORT))
     tiempo_inicial = time.time()
-    print("---------BIENVENIDO A ADIVINA QUIEN---------")
-    os.system("cls")
-    imprimir_tablero(TCPClientSocket)
     barrier = TCPClientSocket.recv(bufferSize)
     string1 = barrier.decode('utf8')
     print(string1)
     end_barrier = TCPClientSocket.recv(bufferSize)
     string2 = end_barrier.decode('utf8')
     print(string2)
-    os.system("cls")
     print('Empezando juego')
     os.system("cls")
+    print("---------BIENVENIDO A ADIVINA QUIEN---------")
+    imprimir_tablero(TCPClientSocket)
     while True:
         data = TCPClientSocket.recv(bufferSize)
         print(data.decode('utf8'))
@@ -63,11 +59,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
             resp = data.decode('utf8')
             print(resp)
             # identificar ganador y terminar juego
-            if text == 'Adios':
+            data = TCPClientSocket.recv(bufferSize)
+            resp = data.decode('utf8')
+            if resp == '1':
+                print('Ganaste :D')
                 break
-            # print("Elige casilla")
-            # x = int(input())
-            # TCPClientSocket.sendall(bytes([x]))
     tiempo_final = time.time()
     tiempo_ejecucion = tiempo_final - tiempo_inicial
     print('Duracion de la partida: %.2f segs.' % round(tiempo_ejecucion, 2))

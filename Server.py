@@ -6,23 +6,23 @@ import time
 from random import randint
 
 bufferSize = 1024
-n = 0
-tablero = [['Jose', 'ojos azules', ' delgado', 'car3', 'car4', 'car5'],
-           ['Juan', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
-           ['Louis', 'ojos verdes', 'delgado', 'car3', 'car4', 'car5'],
-           ['Norma', 'ojos azules', 'delgado', 'car3', 'car4', 'car5'],
-           ['Lola', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
-           ['Maria', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
-           ['Rocio', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5'],
-           ['Frida', 'ojos azules', 'delgado', 'car3', 'car4', 'car5'],
-           ['Celeste', 'ojos verdes', 'delgado', 'car3', 'car4', 'car5'],
-           ['Alfredo', 'ojos cafes', 'delgado', 'car3', 'car4', 'car5']]
+tablero = [['Jose', 'futbol', 'natacion', 'basquetball', 'rugby', 'artes visuales'],
+           ['Paco', 'rugby', 'futbol', 'natacion', 'baseball', 'fotografia'],
+           ['Louis', 'teatro', 'pintura', 'fotografia', 'baile', 'poesia'],
+           ['Norma', 'baile', 'natacion', 'artes visuales', 'teatro', 'canto'],
+           ['Lola', 'teatro', 'fotografia', 'pintura', 'buceo', 'esgrima'],
+           ['Maria', 'baile', 'natacion', 'artes visuales', 'canto', 'pintura'],
+           ['Rocio', 'artes visuales', 'pintura', 'poesia', 'natacion', 'fotografia'],
+           ['Frida', 'canto', 'baile', 'artes visuales', 'teatro', 'pintura'],
+           ['Celeste', 'canto', 'baile', 'kickboxing', 'artes visuales', 'fotografia'],
+           ['Alfredo', 'poesia', 'futbol', 'rugby', 'canto', 'baile']]
 
 
 def imprimir_tablero(Client_conn):
     for i in range(10):
         for j in range(6):
             Client_conn.send(bytes(tablero[i][j], 'utf8'))
+            time.sleep(0.3)
 
 
 def servirPorSiempre(socketTcp, listaconexiones):
@@ -50,15 +50,19 @@ def gestion_conexiones(listaconexiones):
     print(listaconexiones)
 
 
-def jugador_activo(Client_conn, tablero):
+def jugador_activo(Client_conn, tablero, n):
     Client_conn.send(bytes('Tu turno', 'utf8'))
     data = Client_conn.recv(bufferSize)
     pregunta = data.decode('utf8')
     band = 'no'
+    # Comprobar si empata la pregunta con alguna de su personaje
     for i in range(6):
-        if pregunta == tablero[n][i]:
+        if pregunta == tablero[n][i].lower():
             band = 'si'
-        Client_conn.send(bytes(band, 'utf8'))
+    Client_conn.send(bytes(band, 'utf8'))
+    # ¿Adivino el nombre del personaje?
+    if tablero[n][0].lower() == pregunta:
+        return True
 
 
 def recibir_datos(Client_conn, addr, barrier, lock):
@@ -75,13 +79,21 @@ def recibir_datos(Client_conn, addr, barrier, lock):
         print(threading.current_thread().name, 'Después de la barrera', jugador)
         time.sleep(1)
         Client_conn.send(bytes('Todos los jugadores se han conectado', 'utf8'))
+        # Se asigna personaje aleatorio
         n = randint(0, 9)
         print('Se le asigno a {} {}'.format(threading.current_thread().name, tablero[n][0]))
+        imprimir_tablero(Client_conn)
         while True:
             # Lock para determinar turnos
             lock.acquire()
             print('Turno de ' + threading.current_thread().name)
-            jugador_activo(Client_conn, tablero)
+            band = jugador_activo(Client_conn, tablero, n)
+            if band:
+                print('gano ' + threading.current_thread().name)
+                Client_conn.send(bytes('1', 'utf8'))
+            else:
+                print('Todavia no hay ganador')
+                Client_conn.send(bytes('0', 'utf8'))
             lock.release()
             time.sleep(2)
     except Exception as e:
