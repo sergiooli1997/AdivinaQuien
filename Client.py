@@ -4,6 +4,7 @@ import os
 import time
 
 bufferSize = 1024
+ganador = 'no'
 
 r = sr.Recognizer()
 
@@ -28,6 +29,7 @@ def actualiza_jugadores(TCPClientSocket):
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
+    global ganador
     os.system("cls")
     print('Ingresa direccion del servidor')
     HOST = input()
@@ -46,10 +48,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
     print("---------BIENVENIDO A ADIVINA QUIEN---------")
     imprimir_tablero(TCPClientSocket)
     while True:
-        actualiza_jugadores(TCPClientSocket)
+        # actualiza
         data = TCPClientSocket.recv(bufferSize)
         print(data.decode('utf8'))
+        actualiza_jugadores(TCPClientSocket)
         res = 'n'
+        # recibe pregunta por microfono y confirma
         with sr.Microphone() as source:
             while res != 's':
                 print('Lo escucho')
@@ -70,10 +74,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
             print(resp)
             # identificar ganador y terminar juego
             data = TCPClientSocket.recv(bufferSize)
-            resp = data.decode('utf8')
-            if resp == '1':
-                print('Ganaste :D')
+            ganador = data.decode('utf8')
+            if ganador == 'si':
                 break
+    #imprime ganador
+    data = TCPClientSocket.recv(bufferSize)
+    print(data.decode('utf8'))
+    #imprime tiemoi de partida
     tiempo_final = time.time()
     tiempo_ejecucion = tiempo_final - tiempo_inicial
     print('Duracion de la partida: %.2f segs.' % round(tiempo_ejecucion, 2))

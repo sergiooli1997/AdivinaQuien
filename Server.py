@@ -60,6 +60,7 @@ def gestion_conexiones(listaconexiones):
 def jugador_activo(Client_conn, tablero, n):
     global pregunta, respuesta
     Client_conn.send(bytes('Tu turno', 'utf8'))
+    actualiza_jugadores(Client_conn)
     data = Client_conn.recv(bufferSize)
     pregunta = data.decode('utf8')
     band = 'no'
@@ -95,15 +96,15 @@ def recibir_datos(Client_conn, addr, barrier, lock):
         while True:
             # Lock para determinar turnos
             lock.acquire()
-            actualiza_jugadores(Client_conn)
             print('Turno de ' + threading.current_thread().name)
             band = jugador_activo(Client_conn, tablero, n)
             if band:
                 print('gano ' + threading.current_thread().name)
-                Client_conn.send(bytes('1', 'utf8'))
+                Client_conn.send(bytes('si', 'utf8'))
+                Client_conn.send(bytes('gano ' + threading.current_thread().name, 'utf8'))
             else:
                 print('Todavia no hay ganador')
-                Client_conn.send(bytes('0', 'utf8'))
+                Client_conn.send(bytes('no', 'utf8'))
             lock.release()
             time.sleep(2)
     except Exception as e:
