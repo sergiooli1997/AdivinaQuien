@@ -13,7 +13,7 @@ def imprimir_tablero(TCPClientSocket):
         for j in range(6):
             data = TCPClientSocket.recv(bufferSize)
             resp = data.decode('utf8')
-            print(resp + '\t')
+            print('*' + resp, end='\t\t')
             time.sleep(0.1)
         print('\n')
 

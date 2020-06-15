@@ -6,16 +6,16 @@ import time
 from random import randint
 
 bufferSize = 1024
-tablero = [['Jose', 'futbol', 'natacion', 'basquetball', 'rugby', 'artes visuales'],
-           ['Paco', 'rugby', 'futbol', 'natacion', 'baseball', 'fotografia'],
-           ['Louis', 'teatro', 'pintura', 'fotografia', 'baile', 'poesia'],
-           ['Norma', 'baile', 'natacion', 'artes visuales', 'teatro', 'canto'],
-           ['Lola', 'teatro', 'fotografia', 'pintura', 'buceo', 'esgrima'],
-           ['Maria', 'baile', 'natacion', 'artes visuales', 'canto', 'pintura'],
-           ['Rocio', 'artes visuales', 'pintura', 'poesia', 'natacion', 'fotografia'],
-           ['Frida', 'canto', 'baile', 'artes visuales', 'teatro', 'pintura'],
-           ['Celeste', 'canto', 'baile', 'kickboxing', 'artes visuales', 'fotografia'],
-           ['Alfredo', 'poesia', 'futbol', 'rugby', 'canto', 'baile']]
+tablero = [['Jose', 'football', 'natacion', 'basketball', 'taekwondo', 'volleyball'],
+           ['Paco', 'taekwondo', 'football', 'bailar', 'baseball', 'fotografia'],
+           ['Louis', 'teatro', 'kickboxing', 'fotografia', 'pintura', 'cantar'],
+           ['Norma', 'piano', 'bailar', 'ciclismo', 'teatro', 'cantar'],
+           ['Lola', 'teatro', 'fotografia', 'piano', 'buceo', 'volleyball'],
+           ['Maria', 'ciclismo', 'bailar', 'pintura', 'cantar', 'surf'],
+           ['Rocio', 'guitarra', 'pintura', 'volleyball', 'piano', 'basketball'],
+           ['Frida', 'cantar', 'bailar', 'volleyball', 'teatro', 'guitarra'],
+           ['Celeste', 'cantar', 'bailar', 'kickboxing', 'guitarra', 'fotografia'],
+           ['Alfredo', 'surf', 'football', 'taekwondo', 'cantar', 'pintura']]
 
 
 def imprimir_tablero(Client_conn):
