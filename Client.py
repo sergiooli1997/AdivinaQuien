@@ -4,7 +4,6 @@ import os
 import time
 
 bufferSize = 1024
-ganador = 'no'
 
 r = sr.Recognizer()
 
@@ -29,7 +28,6 @@ def actualiza_jugadores(TCPClientSocket):
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
-    global ganador
     os.system("cls")
     print('Ingresa direccion del servidor')
     HOST = input()
@@ -78,10 +76,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
             data = TCPClientSocket.recv(bufferSize)
             resp = data.decode('utf8')
             print(resp)
-    #imprime ganador
+    # imprime ganador
     data = TCPClientSocket.recv(bufferSize)
     print(data.decode('utf8'))
-    #imprime tiemoi de partida
+    # imprime tiemoi de partida
     tiempo_final = time.time()
     tiempo_ejecucion = tiempo_final - tiempo_inicial
     print('Duracion de la partida: %.2f segs.' % round(tiempo_ejecucion, 2))

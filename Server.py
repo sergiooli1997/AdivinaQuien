@@ -22,11 +22,13 @@ respuesta = ""
 band_ganador = False
 ganador = ""
 
+
 def imprimir_tablero(Client_conn):
     for i in range(10):
         for j in range(6):
             Client_conn.send(bytes(tablero[i][j], 'utf8'))
             time.sleep(0.3)
+
 
 def actualiza_jugadores(Client_conn):
     Client_conn.send(bytes(pregunta, 'utf8'))
