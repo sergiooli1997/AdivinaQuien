@@ -117,6 +117,7 @@ def recibir_datos(Client_conn, addr, barrier, lock):
                 Client_conn.send(bytes('no', 'utf8'))
             jugador_activo(Client_conn, tablero, n)
             lock.release()
+            time.sleep(0.1)
     except Exception as e:
         print(e)
     finally:

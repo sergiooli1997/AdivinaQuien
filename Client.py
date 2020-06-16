@@ -46,6 +46,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
     print("---------BIENVENIDO A ADIVINA QUIEN---------")
     imprimir_tablero(TCPClientSocket)
     while True:
+        print('Espera tu turno')
         # determinar si hay ganador antes de preguntar
         data = TCPClientSocket.recv(bufferSize)
         ganador = data.decode('utf8')
